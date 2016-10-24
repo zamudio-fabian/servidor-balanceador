@@ -17,4 +17,6 @@
 
 const Route = use('Route')
 
-Route.on('/').render('welcome')
+Route.get('/', 'CatalogoController.index')
+Route.on('/about').render('about')
+Route.on('/contact').render('contact')

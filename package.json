@@ -19,6 +19,8 @@
     "adonis-framework": "^3.0.3",
     "adonis-lucid": "^3.0.9",
     "adonis-middleware": "^1.0.8",
+    "socket.io": "^1.5.1",
+    "sqlite3": "^3.1.6",
     "standard": "^8.4.0",
     "youch": "^1.0.1"
   },
