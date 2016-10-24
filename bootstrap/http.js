@@ -88,6 +88,7 @@ module.exports = function (callback) {
       |
       */
       const Server = use('Adonis/Src/Server')
+      use('App/Http/socket')(Server.getInstance())
       Server.listen(Env.get('HOST'), Env.get('PORT'))
       if (typeof (callback) === 'function') {
         callback()
