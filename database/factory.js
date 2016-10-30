@@ -28,3 +28,4 @@ Factory.blueprint('App/Model/User', (fake) => {
     password: fake.password()
   }
 })
+

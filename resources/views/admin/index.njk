@@ -1,0 +1,53 @@
+
+{% extends 'master' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-success">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Simulador servidores catálogo</div>
+        <div class="panel-body">
+          <p>...</p>
+        </div>
+        <!-- Table -->
+        <table class="table">
+            <tr>
+                <th>Socket id</td>
+                <th>Cantidad Conexiones</td>
+            </tr>
+            {% for post in posts %} 
+            <tr id="{{ post.socket_id }}">
+                <td>{{ post.socket_id }}</td> 
+                <td id="{{post.socket_id}}_cantidad_conexiones"> {{ post.cantidad_conexiones }} </tp>
+            </tr>
+            {% endfor %}
+        </table>
+      </div>
+    </div>
+
+  </div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+var socket = io.connect('/admin');
+
+socket.on('newCatalogo',function(result){
+    $('table tr:last').after('<tr id="'+result.socket_id+'"><td>'+result.socket_id+'</td><td id="'+result.socket_id+'_cantidad_conexiones">'+result.cantidad_conexiones+'</td></tr>');
+});
+
+socket.on('deleteCatalogo',function(socket_id){
+    $('[id="'+socket_id+'"]').remove();
+});
+
+socket.on('parAgregado',function(socket_id){
+    var cantidad = parseInt($('[id="'+socket_id+'_cantidad_conexiones"]').text())
+    $('[id="'+socket_id+'_cantidad_conexiones"]').text(cantidad+1);
+});
+
+socket.on('parEliminado',function(socket_id){
+    var cantidad = parseInt($('[id="'+socket_id+'_cantidad_conexiones"]').text())
+    $('[id="'+socket_id+'_cantidad_conexiones"]').text(cantidad-1);
+});
+
+</script>
+{% endblock %}
