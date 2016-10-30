@@ -1,18 +1,85 @@
 {% extends 'master' %}
 
 {% block content %}
-  <div class="posts-wrapper">
-    {% for post in posts %} 
-      <div class="post">
-        <h2><a href=""> {{ post.title }} </a></h2> 
-        <p> {{ post.content }} </p>
-      </div>
-      {% else %}
-        <h2> No posts found </h2>
-    {% endfor %}
-  </div>
-  <script src="/socket.io/socket.io.js"></script>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-success">
+              <div class="panel-heading">
+                <h4>Datos</h4>
+              </div>
+              <div class="panel-body">
+                <dl class="dl-horizontal">
+                  <dt>ID</dt>
+                  <dd><span id="catalogo_id"></span></dd>
+                  <dt>Cantidad conexiones</dt>
+                  <dd><span id="cantidad_conexiones"></span></dd>
+                </dl>
+                <button type="button" class="btn btn-danger pull-right" onclick="eliminarPar()">Elminar Par</button>
+                <button type="button" class="btn btn-primary pull-right" style="margin-right:10px"  onclick="agregarPar()">Agregar Par</button>
+              </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-success">
+              <div class="panel-heading">
+                <h4>Otros catálogos</h4>
+              </div>
+              <div class="panel-body">
+                  <button type="button" class="btn btn-primary" onclick="getAllOthersCatalogos()">Buscar otros catálogos</button>
+                </div>
+                <!-- Table -->
+                <table id="resultAllOthersCatalogos" class="table">
+                    <thead><tr>
+                            <th>Socket id</td>
+                            <th>Cantidad Conexiones</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
 <script>
-  var socket = io();
+var socket = io.connect('/catalogo');
+    socket.emit('addCatalogo',{cantidad_conexiones:0});
+
+    socket.on('id',function(id){
+        $('#catalogo_id').text(id);
+        $('#cantidad_conexiones').text('0');
+    });
+
+    function agregarPar(){
+        socket.emit('addParToCatalogo');
+    }
+
+    socket.on('parAgregado',function(){
+        var cantidad_conexiones = $('#cantidad_conexiones').text();
+        $('#cantidad_conexiones').text(parseInt(cantidad_conexiones)+1);
+    });
+
+    function getAllOthersCatalogos(){
+        socket.emit('getAllOthersCatalogos');
+    }
+
+    socket.on('resultAllOthersCatalogos',function(result){
+        $('#resultAllOthersCatalogos tbody').empty();
+        $.each(result,function(index,catalogo){
+            $('#resultAllOthersCatalogos > tbody:last-child').append('<tr><td>'+catalogo.socket_id+'</td><td>'+catalogo.cantidad_conexiones+'</td></tr>');
+        });
+    });
+
+
+    function eliminarPar(){
+        socket.emit('removeParToCatalogo');
+    }
+
+    socket.on('parEliminado',function(){
+        var cantidad_conexiones = $('#cantidad_conexiones').text();
+        $('#cantidad_conexiones').text(parseInt(cantidad_conexiones)-1);
+    });
 </script>
 {% endblock %}

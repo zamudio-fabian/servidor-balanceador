@@ -6,11 +6,10 @@ class CatalogosTableSchema extends Schema {
 
   up () {
     this.create('catalogos', (table) => {
-      table.integer('socket_id')
+      table.increments()
+      table.string('socket_id').unique()
       table.integer('cantidad_conexiones')
       table.timestamps()
-
-      table.primary(['socket_id'])
     })
   }
 
