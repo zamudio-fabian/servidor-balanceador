@@ -9,6 +9,8 @@ class CatalogosTableSchema extends Schema {
       table.increments()
       table.string('socket_id').unique()
       table.integer('cantidad_conexiones')
+      table.string('ip')
+      table.integer('port')
       table.timestamps()
     })
   }

@@ -28,7 +28,7 @@ module.exports = function (server) {
     catalogoRoom.on('connection', function(socket){
         socket.on('addCatalogo', function(){
             co(function * (cantidad_conexiones) {
-                const result = yield CatalogoController.addCatalogo(socket.id,cantidad_conexiones);
+                const result = yield CatalogoController.addCatalogo(socket,cantidad_conexiones);
                 socket.emit('id',socket.id);
                 adminRoom.emit('newCatalogo',result);
             })

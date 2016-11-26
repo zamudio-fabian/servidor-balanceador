@@ -7,7 +7,6 @@ class CatalogoController {
 
     * index (request, response) {
         yield response.sendView('catalogo.index') 
-
     }
 
     /**
@@ -16,10 +15,12 @@ class CatalogoController {
     |------------------------------------------------------------------------
     */
 
-    * addCatalogo (socket_id,cantidad_conexiones = 0){
+    * addCatalogo (socket,cantidad_conexiones = 0){
         const instancia = new Catalogo()
-        instancia.socket_id = socket_id
+        instancia.socket_id = socket.id
         instancia.cantidad_conexiones  = cantidad_conexiones
+        instancia.ip = socket.request.connection.remoteAddress
+        instancia.port = socket.request.connection.remotePort
         yield instancia.save() 
         return instancia;
     }
