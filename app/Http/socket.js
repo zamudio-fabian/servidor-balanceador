@@ -33,7 +33,6 @@ module.exports = function (server) {
                 adminRoom.emit('newCatalogo',result);
             })
             .catch(console.error)
-
         });
 
         socket.on('addParToCatalogo', function(){
@@ -89,7 +88,7 @@ module.exports = function (server) {
         socket.on('getCatalogoLessBusy', function(){
             co(function * () {
                 const result = yield CatalogoController.getCatalogoLessBusy();
-                socket.emit('returnCatalogoLessBusy',result)
+                callback(result);
             })
             .catch(console.error)
 
