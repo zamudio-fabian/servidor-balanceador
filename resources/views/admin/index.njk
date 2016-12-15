@@ -14,11 +14,15 @@
         <table class="table">
             <tr>
                 <th>Socket id</td>
+                <th>Ip</td>
+                <th>Port</td>
                 <th>Cantidad Conexiones</td>
             </tr>
             {% for post in posts %} 
             <tr id="{{ post.socket_id }}">
                 <td>{{ post.socket_id }}</td> 
+                <td>{{ post.ip }}</td> 
+                <td>{{ post.port }}</td> 
                 <td id="{{post.socket_id}}_cantidad_conexiones"> {{ post.cantidad_conexiones }} </tp>
             </tr>
             {% endfor %}
@@ -32,7 +36,7 @@
 var socket = io.connect('/admin');
 
 socket.on('newCatalogo',function(result){
-    $('table tr:last').after('<tr id="'+result.socket_id+'"><td>'+result.socket_id+'</td><td id="'+result.socket_id+'_cantidad_conexiones">'+result.cantidad_conexiones+'</td></tr>');
+    $('table tr:last').after('<tr id="'+result.socket_id+'"><td>'+result.socket_id+'</td><td>'+result.ip+'</td><td>'+result.port+'</td><td id="'+result.socket_id+'_cantidad_conexiones">'+result.cantidad_conexiones+'</td></tr>');
 });
 
 socket.on('deleteCatalogo',function(socket_id){
