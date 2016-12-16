@@ -20,7 +20,9 @@
     "adonis-lucid": "^3.0.9",
     "adonis-middleware": "^1.0.8",
     "angular": "^1.5.8",
+    "monolog": "0.0.5",
     "socket.io": "^1.5.1",
+    "source-map-support": "^0.4.6",
     "sqlite3": "^3.1.6",
     "standard": "^8.4.0",
     "youch": "^1.0.1"
