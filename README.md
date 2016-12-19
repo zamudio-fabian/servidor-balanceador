@@ -4,6 +4,12 @@
 
 Con la intención de crear un controlador para administrar las conexiones de los pares hacia los servidores catalogos, se crea un servidor que se encarga de balancear y distribuir el trabajo basándose en la cantidad de conexiones actuales de cada servidor catalogo. Para este propósito se utilizaron las tecnologías: NodeJs, framework AdonisJs, SQLite, Socket.io lo que nos permitió un desarrollo e independencia de cada componente del proceso.
 
+#### Funciones
+
+* Balancear carga en base a la cantidad de conexiones de cada servidor catálogo.
+* Devolver lista de catálogos al catálogo que lo solicite.
+* Asignar un catálogo a un par.
+
 #### Requisitos
 
 Como parte fundamental del proyecto es necesario tener instalado NodeJs (https://nodejs.org/es/) y npm para la instalación de librerías.
