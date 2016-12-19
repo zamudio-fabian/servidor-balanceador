@@ -28,11 +28,17 @@ Llenar el archivo con los datos segun corresponda
 >   NODE_ENV=development
 
 >   CACHE_VIEWS=false
+
 >   SESSION_DRIVER=cookie
+
 >   DB_CONNECTION=sqlite
+
 >   DB_HOST=127.0.0.1
+
 >   DB_USER=root
+
 >   DB_PASSWORD=
+
 >   DB_DATABASE=adonis
 
 
