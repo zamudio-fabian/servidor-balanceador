@@ -1,12 +1,12 @@
 # Servidor Balanceador
 
-##### Propósito
+#### Propósito
 
-Con la intención de crear un controlador para administrar las conexiones de los pares hacia los servidores catalogos, se crea un servidor que se encarga de balancear y distribuir el trabajo basandose en la cantidad de conexiones actuales de cada servidor catalogo. Para este proposito se utilizaron las tecnologias: NodeJs, framework AdonisJs, SQLite, Socket.io lo que nos permitio un desarrollo e independencia de cada componente del proceso.
+Con la intención de crear un controlador para administrar las conexiones de los pares hacia los servidores catalogos, se crea un servidor que se encarga de balancear y distribuir el trabajo basándose en la cantidad de conexiones actuales de cada servidor catalogo. Para este propósito se utilizaron las tecnologías: NodeJs, framework AdonisJs, SQLite, Socket.io lo que nos permitió un desarrollo e independencia de cada componente del proceso.
 
 #### Requisitos
 
-Como parte fundamental del proyecto es necesario tener instalado NodeJs (https://nodejs.org/es/) y npm para la instalación de librerias.
+Como parte fundamental del proyecto es necesario tener instalado NodeJs (https://nodejs.org/es/) y npm para la instalación de librerías.
 
 #### Instalación
 
