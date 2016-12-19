@@ -50,5 +50,5 @@ $ npm run
 
 
 ### Author
-Zamdudio Fabian
+Zamudio Fabian
 fabian.zamudio.89@gmail.com
