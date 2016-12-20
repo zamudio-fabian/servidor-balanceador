@@ -1,14 +1,15 @@
 'use strict'
 
 const Catalogo = use('App/Model/Catalogo') 
+const Log = use('App/Model/Log') 
 const Database = use('Database')
 const Helpers = use('Helpers')
 var monolog = require('monolog')
 var Logger = monolog.Logger
 var StreamHandler = monolog.handler.StreamHandler
-var log = new Logger('Log')
-log.pushHandler(new StreamHandler(Helpers.storagePath('Log.json'),Logger.DEBUG))
-console.log(__dirname);
+var myLogger = new Logger('Log')
+myLogger.pushHandler(new StreamHandler(Helpers.storagePath('Log.json'),Logger.DEBUG))
+
 class CatalogoController {
 
     * index (request, response) {
@@ -29,67 +30,113 @@ class CatalogoController {
         instancia.port = socket.request.connection.remotePort
         yield instancia.save() 
 
-        log.info('ID: '+socket.id+' || Nuevo servidor de CATALOGO || IP:'+instancia.ip+':'+instancia.port)
+        const log = new Log()
+        log.socket_id = socket.id
+        log.ip = socket.request.connection.remoteAddress
+        log.port = socket.request.connection.remotePort
+        log.descripcion = 'Nuevo servidor de CATALOGO'
+        log.type = 'success'
+        yield log.save() 
+
+        myLogger.info('ID: '+socket.id+' || Nuevo servidor de CATALOGO || IP:'+instancia.ip+':'+instancia.port)
         return instancia;
     }
 
-    * removeCatalogo (socket_id){
+    * removeCatalogo (socket){
         yield Database
             .table('catalogos')
-            .where('socket_id', socket_id)
+            .where('socket_id', socket.id)
             .delete()
 
-        log.info('ID: '+socket_id+' || Servidor de CATALOGO eliminado')
+        const instancia = new Log()
+        instancia.socket_id = socket.id
+        instancia.ip = socket.request.connection.remoteAddress
+        instancia.port = socket.request.connection.remotePort
+        instancia.descripcion = 'Servidor de CATALOGO eliminado'
+        instancia.type = 'danger'
+        yield instancia.save()
+
+        myLogger.info('ID: '+socket.id+' || Servidor de CATALOGO eliminado')
         return true;
     }
 
-    * addParToCatalogo (catalogo_id){
-        const instancia = yield Catalogo.findBy('socket_id', catalogo_id)
+    * addParToCatalogo (socket){
+        const instancia = yield Catalogo.findBy('socket_id', socket.id)
 
         const affectedRows = yield Database
                 .table('catalogos')
-                .where('socket_id', catalogo_id)
+                .where('socket_id', socket.id)
                 .update('cantidad_conexiones', instancia.cantidad_conexiones+1)
 
-        log.info('ID: '+catalogo_id+' || Par agregado a Servidor de CATALOGO')
+        const log = new Log()
+        log.socket_id = socket.id
+        log.ip = socket.request.connection.remoteAddress
+        log.port = socket.request.connection.remotePort
+        log.descripcion = 'Par agregado a Servidor de CATALOGO TOTAL='+instancia.cantidad_conexiones
+        log.type = 'info'
+        yield log.save()
+
+        myLogger.info('ID: '+socket.id+' || Par agregado a Servidor de CATALOGO')
         return true;
     }
 
-    * removeParToCatalogo (catalogo_id){
-        const instancia = yield Catalogo.findBy('socket_id', catalogo_id)
+    * removeParToCatalogo (socket){
+        const instancia = yield Catalogo.findBy('socket_id', socket.id)
 
         if(instancia.cantidad_conexiones>0){
             const affectedRows = yield Database
                 .table('catalogos')
-                .where('socket_id', catalogo_id)
+                .where('socket_id', socket.id)
                 .update('cantidad_conexiones', instancia.cantidad_conexiones-1)
 
-            log.info('ID: '+catalogo_id+' || Par eliminado en Servidor de CATALOGO')
+            const log = new Log()
+            log.socket_id = socket.id
+            log.ip = socket.request.connection.remoteAddress
+            log.port = socket.request.connection.remotePort
+            log.descripcion = 'Par eliminado en Servidor de CATALOGO TOTAL='+instancia.cantidad_conexiones
+            log.type = 'warning'
+            yield log.save()
+
+            myLogger.info('ID: '+socket.id+' || Par eliminado en Servidor de CATALOGO')
             return true;
         }
 
         return false;
     }
 
-    * getAllOthersCatalogos (catalogo_id){
+    * getAllOthersCatalogos (socket){
         const catalogos = yield Catalogo.query()
-                            .where('socket_id', '<>' ,catalogo_id)
+                            .where('socket_id', '<>' ,socket.id)
                             .fetch();
 
-        log.info('ID: '+catalogo_id+' || Solicita otros Servidor de CATALOGO')
+        const log = new Log()
+        log.socket_id = socket.id
+        log.ip = socket.request.connection.remoteAddress
+        log.port = socket.request.connection.remotePort
+        log.descripcion = 'Solicita otros Servidor de CATALOGO'
+        log.type = 'active'
+        yield log.save()        
+
+        myLogger.info('ID: '+socket.id+' || Solicita otros Servidor de CATALOGO')
         return catalogos;
     }
 
-    * getCatalogoLessBusy (){
+    * getCatalogoLessBusy (socket){
         const catalogo = yield Catalogo.query()
                             .orderBy('cantidad_conexiones', 'asc')
                             .first();
 
-        log.info('Solucitud de Servidor de CATALOGO más desocupado :'+catalogo.socket_id)
+        const log = new Log()
+        log.socket_id = socket.id
+        log.ip = socket.request.connection.remoteAddress
+        log.port = socket.request.connection.remotePort
+        log.descripcion = 'Solucitud de Servidor de CATALOGO más desocupado :'+catalogo.socket_id
+        log.type = ''
+        yield log.save()  
+
+        myLogger.info('Solucitud de Servidor de CATALOGO más desocupado :'+catalogo.socket_id)
         return catalogo;
     }
-
-    
 
 }
 

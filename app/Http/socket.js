@@ -9,6 +9,7 @@ var Ioc = require('adonis-fold').Ioc
 |------------------------------------------------------------------------
 */
 var CatalogoController = Ioc.make('App/Http/Controllers/CatalogoController')
+var AdminController = Ioc.make('App/Http/Controllers/AdminController')
 var ParController = Ioc.make('App/Http/Controllers/CatalogoController')
 
 module.exports = function (server) {
@@ -38,7 +39,7 @@ module.exports = function (server) {
         socket.on('addParToCatalogo', function(){
             var result = false;
             co(function * () {
-                result = yield CatalogoController.addParToCatalogo(socket.id);
+                result = yield CatalogoController.addParToCatalogo(socket);
                 if(result){
                     socket.emit('parAgregado')
                     adminRoom.emit('parAgregado',socket.id);
@@ -51,7 +52,7 @@ module.exports = function (server) {
         socket.on('removeParToCatalogo', function(){
             var result = false;
             co(function * () {
-                result = yield CatalogoController.removeParToCatalogo(socket.id);
+                result = yield CatalogoController.removeParToCatalogo(socket);
                 if(result){
                     socket.emit('parEliminado')
                     adminRoom.emit('parEliminado',socket.id);
@@ -63,7 +64,7 @@ module.exports = function (server) {
 
         socket.on('getAllOthersCatalogos', function(){
             co(function * () {
-                const result = yield CatalogoController.getAllOthersCatalogos(socket.id);
+                const result = yield CatalogoController.getAllOthersCatalogos(socket);
                 socket.emit('resultAllOthersCatalogos',result);
             })
             .catch(console.error)
@@ -72,7 +73,7 @@ module.exports = function (server) {
 
         socket.on('disconnect', function(){
             co(function * () {
-                const result = yield CatalogoController.removeCatalogo(socket.id);
+                const result = yield CatalogoController.removeCatalogo(socket);
                 adminRoom.emit('deleteCatalogo',socket.id);
             })
             .catch(console.error)
@@ -87,7 +88,7 @@ module.exports = function (server) {
     parRoom.on('connection', function (socket) {
         socket.on('getCatalogoLessBusy', function(){
             co(function * () {
-                const result = yield CatalogoController.getCatalogoLessBusy();
+                const result = yield CatalogoController.getCatalogoLessBusy(socket);
                 callback(result);
             })
             .catch(console.error)
@@ -101,6 +102,13 @@ module.exports = function (server) {
     |------------------------------------------------------------------------
     */
     adminRoom.on('connection', function (socket) {
+        socket.on('getEstadisticas', function(lastLog_id){
+            co(function * () {
+                const result = yield AdminController.getEstadisticas(lastLog_id);
+                socket.emit('resultEstadisticas',result);
+            })
+            .catch(console.error)
+        });
     })
 
 }

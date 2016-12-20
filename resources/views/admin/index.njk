@@ -11,7 +11,7 @@
           <p>...</p>
         </div>
         <!-- Table -->
-        <table class="table">
+        <table class="table" id="catalogos">
             <tr>
                 <th>Socket id</td>
                 <th>Ip</td>
@@ -29,29 +29,68 @@
         </table>
       </div>
     </div>
-
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">Logs</div>
+                <table class="table" id="logs"> 
+                    <tbody> 
+                        {% for log in logs %} 
+                        <tr class="{{log.type}}" id="{{log.id}}"> 
+                            <th >{{log.socket_id}}</th> 
+                            <th>{{log.ip}}</th> 
+                            <td>{{log.port}}</td> 
+                            <td>{{log.descripcion}}</td> 
+                            <td>{{log.created_at}}</td> 
+                        </tr> 
+                        {% endfor %}
+                    </tbody> 
+                </table> 
+            </div>
+        </div>
+        </div>
+    </div>
   </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
 var socket = io.connect('/admin');
+{% if logs[0] %}
+var lastLog_id = {{logs[0].id}};
+{% else %}
+var lastLog_id = -1;
+{% endif %}
 
 socket.on('newCatalogo',function(result){
-    $('table tr:last').after('<tr id="'+result.socket_id+'"><td>'+result.socket_id+'</td><td>'+result.ip+'</td><td>'+result.port+'</td><td id="'+result.socket_id+'_cantidad_conexiones">'+result.cantidad_conexiones+'</td></tr>');
+    $('table#catalogos tr:last').after('<tr id="'+result.socket_id+'"><td>'+result.socket_id+'</td><td>'+result.ip+'</td><td>'+result.port+'</td><td id="'+result.socket_id+'_cantidad_conexiones">'+result.cantidad_conexiones+'</td></tr>');
+    refresh();
 });
 
 socket.on('deleteCatalogo',function(socket_id){
     $('[id="'+socket_id+'"]').remove();
+    refresh();
 });
 
 socket.on('parAgregado',function(socket_id){
     var cantidad = parseInt($('[id="'+socket_id+'_cantidad_conexiones"]').text())
     $('[id="'+socket_id+'_cantidad_conexiones"]').text(cantidad+1);
+    refresh();
 });
 
 socket.on('parEliminado',function(socket_id){
     var cantidad = parseInt($('[id="'+socket_id+'_cantidad_conexiones"]').text())
     $('[id="'+socket_id+'_cantidad_conexiones"]').text(cantidad-1);
+    refresh();
 });
 
+socket.on('resultEstadisticas',function(data){
+    lastLog_id = data[data.length-1].id;
+    data.forEach(function(log){
+        $('table#logs tbody').prepend('<tr class="'+log.type+'"><td>'+log.socket_id+'</td><td>'+log.ip+'</td><td>'+log.port+'</td><td>'+log.descripcion+'</td><td>'+log.created_at+'</td></tr>');
+    });
+});
+
+refresh = function(){
+    socket.emit('getEstadisticas',lastLog_id);
+}
 </script>
 {% endblock %}
