@@ -12,6 +12,10 @@ var CatalogoController = Ioc.make('App/Http/Controllers/CatalogoController')
 var AdminController = Ioc.make('App/Http/Controllers/AdminController')
 var ParController = Ioc.make('App/Http/Controllers/CatalogoController')
 
+co(function * () {
+    yield AdminController.truncateAll()
+})
+
 module.exports = function (server) {
 
     const io = use('socket.io')(server)
@@ -20,6 +24,7 @@ module.exports = function (server) {
     var catalogoRoom = io.of('/catalogo');
     var parRoom = io.of('/par');
     var adminRoom = io.of('/admin');
+
 
     /**
     |------------------------------------------------------------------------

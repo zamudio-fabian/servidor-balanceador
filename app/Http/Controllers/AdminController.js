@@ -2,6 +2,7 @@
 
 const Catalogo = use('App/Model/Catalogo') 
 const Log = use('App/Model/Log') 
+const Database = use('Database')
 
 class AdminController {
 
@@ -20,6 +21,12 @@ class AdminController {
         const logs = yield Log.query().where('id','>',lastLog_id).orderBy('id', 'asc').fetch();
         return logs
     }
+
+    * truncateAll () {
+        yield Database.table('logs').delete()
+        yield Database.table('catalogos').delete()
+    }
+
 }
 
 module.exports = AdminController
