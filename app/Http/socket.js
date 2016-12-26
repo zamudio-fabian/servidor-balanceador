@@ -27,9 +27,9 @@ module.exports = function (server) {
     |------------------------------------------------------------------------
     */
     catalogoRoom.on('connection', function(socket){
-        socket.on('addCatalogo', function(){
-            co(function * (cantidad_conexiones) {
-                const result = yield CatalogoController.addCatalogo(socket,cantidad_conexiones);
+        socket.on('addCatalogo', function(data){
+            co(function * () {
+                const result = yield CatalogoController.addCatalogo(socket,data.port,data.pares);
                 socket.emit('id',socket.id);
                 adminRoom.emit('newCatalogo',result);
             })
@@ -62,10 +62,10 @@ module.exports = function (server) {
             
         }); 
 
-        socket.on('getAllOthersCatalogos', function(){
+        socket.on('getAllOthersCatalogos', function(callback){
             co(function * () {
                 const result = yield CatalogoController.getAllOthersCatalogos(socket);
-                socket.emit('resultAllOthersCatalogos',result);
+                callback(result);
             })
             .catch(console.error)
 
@@ -86,10 +86,11 @@ module.exports = function (server) {
     |------------------------------------------------------------------------
     */
     parRoom.on('connection', function (socket) {
-        socket.on('getCatalogoLessBusy', function(){
+        socket.on('getCatalogoLessBusy', function(data){
             co(function * () {
                 const result = yield CatalogoController.getCatalogoLessBusy(socket);
-                callback(result);
+                socket.emit('getCatalogoLessBusy',result);
+
             })
             .catch(console.error)
 

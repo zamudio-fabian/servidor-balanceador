@@ -22,12 +22,12 @@ class CatalogoController {
     |------------------------------------------------------------------------
     */
 
-    * addCatalogo (socket,cantidad_conexiones = 0){
+    * addCatalogo (socket,puerto,cantidad_conexiones = 0){
         const instancia = new Catalogo()
         instancia.socket_id = socket.id
         instancia.cantidad_conexiones  = cantidad_conexiones
         instancia.ip = socket.request.connection.remoteAddress
-        instancia.port = socket.request.connection.remotePort
+        instancia.port = puerto
         yield instancia.save() 
 
         const log = new Log()
@@ -72,7 +72,7 @@ class CatalogoController {
         log.socket_id = socket.id
         log.ip = socket.request.connection.remoteAddress
         log.port = socket.request.connection.remotePort
-        log.descripcion = 'Par agregado a Servidor de CATALOGO TOTAL='+instancia.cantidad_conexiones
+        log.descripcion = 'Par agregado a Servidor de CATALOGO TOTAL='+instancia.cantidad_conexiones+1
         log.type = 'info'
         yield log.save()
 
@@ -93,7 +93,7 @@ class CatalogoController {
             log.socket_id = socket.id
             log.ip = socket.request.connection.remoteAddress
             log.port = socket.request.connection.remotePort
-            log.descripcion = 'Par eliminado en Servidor de CATALOGO TOTAL='+instancia.cantidad_conexiones
+            log.descripcion = 'Par eliminado en Servidor de CATALOGO TOTAL='+instancia.cantidad_conexiones-1
             log.type = 'warning'
             yield log.save()
 

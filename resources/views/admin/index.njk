@@ -2,6 +2,16 @@
 {% extends 'master' %}
 
 {% block content %}
+<style>
+#logs.thead, #logs.tbody { display: block; }
+
+tbody {
+    height: 300px;
+    display: inline-block;
+    width: 100%;
+    overflow-y:scroll;
+}
+</style>
   <div class="row">
     <div class="col-md-6">
       <div class="panel panel-success">
@@ -30,10 +40,10 @@
       </div>
     </div>
     <div class="col-md-12">
-        <div class="panel panel-default">
+        <div class="panel panel-default" style="margin-bottom:50px;">
             <!-- Default panel contents -->
             <div class="panel-heading">Logs</div>
-                <table class="table" id="logs"> 
+                <table class="table" id="logs" > 
                     <tbody> 
                         {% for log in logs %} 
                         <tr class="{{log.type}}" id="{{log.id}}"> 
