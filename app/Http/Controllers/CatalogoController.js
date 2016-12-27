@@ -72,7 +72,7 @@ class CatalogoController {
         log.socket_id = socket.id
         log.ip = socket.request.connection.remoteAddress
         log.port = socket.request.connection.remotePort
-        log.descripcion = 'Par agregado a Servidor de CATALOGO TOTAL='+instancia.cantidad_conexiones+1
+        log.descripcion = 'Par agregado a Servidor de CATALOGO TOTAL='+ parseInt(instancia.cantidad_conexiones+1)
         log.type = 'info'
         yield log.save()
 
@@ -93,7 +93,7 @@ class CatalogoController {
             log.socket_id = socket.id
             log.ip = socket.request.connection.remoteAddress
             log.port = socket.request.connection.remotePort
-            log.descripcion = 'Par eliminado en Servidor de CATALOGO TOTAL='+instancia.cantidad_conexiones-1
+            log.descripcion = 'Par eliminado en Servidor de CATALOGO TOTAL='+parseInt(instancia.cantidad_conexiones-1)
             log.type = 'warning'
             yield log.save()
 
@@ -125,16 +125,27 @@ class CatalogoController {
         const catalogo = yield Catalogo.query()
                             .orderBy('cantidad_conexiones', 'asc')
                             .first();
+        if(catalogo != null){
+            const log = new Log()
+            log.socket_id = socket.id
+            log.ip = socket.request.connection.remoteAddress
+            log.port = socket.request.connection.remotePort
+            log.descripcion = 'Solucitud de Servidor de CATALOGO más desocupado :'+catalogo.socket_id
+            log.type = ''
+            yield log.save()  
 
-        const log = new Log()
-        log.socket_id = socket.id
-        log.ip = socket.request.connection.remoteAddress
-        log.port = socket.request.connection.remotePort
-        log.descripcion = 'Solucitud de Servidor de CATALOGO más desocupado :'+catalogo.socket_id
-        log.type = ''
-        yield log.save()  
-
-        myLogger.info('Solucitud de Servidor de CATALOGO más desocupado :'+catalogo.socket_id)
+            myLogger.info('Solucitud de Servidor de CATALOGO más desocupado :'+catalogo.socket_id)
+            
+        }else{
+            const log = new Log()
+            log.socket_id = socket.id
+            log.ip = socket.request.connection.remoteAddress
+            log.port = socket.request.connection.remotePort
+            log.descripcion = 'Solucitud de Servidor de CATALOGO más desocupado : no hay'
+            log.type = ''
+            yield log.save() 
+            myLogger.info('Solucitud de Servidor de CATALOGO más desocupado : no hay')
+        }
         return catalogo;
     }
 
