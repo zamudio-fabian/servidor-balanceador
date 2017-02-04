@@ -51,7 +51,7 @@ Llenar el archivo con los datos segun corresponda
 
 ```
 $ ./ace migration:run
-$ npm run
+$ npm run dev
 ```
 
 
