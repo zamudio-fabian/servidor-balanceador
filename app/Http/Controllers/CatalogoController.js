@@ -80,6 +80,15 @@ class CatalogoController {
         return true;
     }
 
+    * syncPares (socket,pares){
+        const affectedRows = yield Database
+                .table('catalogos')
+                .where('socket_id', socket.id)
+                .update('cantidad_conexiones', pares)
+
+        return true;
+    }
+
     * removeParToCatalogo (socket){
         const instancia = yield Catalogo.findBy('socket_id', socket.id)
 

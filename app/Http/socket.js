@@ -52,7 +52,14 @@ module.exports = function (server) {
             })
             .catch(console.error)
 
-                    });  
+        });
+
+        socket.on('syncPares',function(pares){
+            co(function * () {
+                yield CatalogoController.syncPares(socket,pares);
+            })
+            .catch(console.error)
+        });  
 
         socket.on('removeParToCatalogo', function(){
             var result = false;
