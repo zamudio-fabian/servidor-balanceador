@@ -57,9 +57,10 @@ module.exports = function (server) {
         socket.on('syncPares',function(pares){
             co(function * () {
                 yield CatalogoController.syncPares(socket,pares);
+                adminRoom.emit('syncParVista',socket.id, pares);
             })
             .catch(console.error)
-        });  
+        });
 
         socket.on('removeParToCatalogo', function(){
             var result = false;
@@ -71,8 +72,8 @@ module.exports = function (server) {
                 }
             })
             .catch(console.error)
-            
-        }); 
+
+        });
 
         socket.on('getAllOthersCatalogos', function(callback){
             co(function * () {
@@ -81,7 +82,7 @@ module.exports = function (server) {
             })
             .catch(console.error)
 
-        });       
+        });
 
         socket.on('disconnect', function(){
             co(function * () {
@@ -106,7 +107,7 @@ module.exports = function (server) {
             })
             .catch(console.error)
 
-        });  
+        });
     })
 
     /**

@@ -28,11 +28,11 @@ tbody {
                 <th>Port</td>
                 <th>Cantidad Conexiones</td>
             </tr>
-            {% for post in posts %} 
+            {% for post in posts %}
             <tr id="{{ post.socket_id }}">
-                <td>{{ post.socket_id }}</td> 
-                <td>{{ post.ip }}</td> 
-                <td>{{ post.port }}</td> 
+                <td>{{ post.socket_id }}</td>
+                <td>{{ post.ip }}</td>
+                <td>{{ post.port }}</td>
                 <td id="{{post.socket_id}}_cantidad_conexiones"> {{ post.cantidad_conexiones }} </tp>
             </tr>
             {% endfor %}
@@ -43,19 +43,19 @@ tbody {
         <div class="panel panel-default" style="margin-bottom:50px;">
             <!-- Default panel contents -->
             <div class="panel-heading">Logs</div>
-                <table class="table" id="logs" > 
-                    <tbody> 
-                        {% for log in logs %} 
-                        <tr class="{{log.type}}" id="{{log.id}}"> 
-                            <th >{{log.socket_id}}</th> 
-                            <th>{{log.ip}}</th> 
-                            <td>{{log.port}}</td> 
-                            <td>{{log.descripcion}}</td> 
-                            <td>{{log.created_at}}</td> 
-                        </tr> 
+                <table class="table" id="logs" >
+                    <tbody>
+                        {% for log in logs %}
+                        <tr class="{{log.type}}" id="{{log.id}}">
+                            <th >{{log.socket_id}}</th>
+                            <th>{{log.ip}}</th>
+                            <td>{{log.port}}</td>
+                            <td>{{log.descripcion}}</td>
+                            <td>{{log.created_at}}</td>
+                        </tr>
                         {% endfor %}
-                    </tbody> 
-                </table> 
+                    </tbody>
+                </table>
             </div>
         </div>
         </div>
@@ -83,6 +83,11 @@ socket.on('deleteCatalogo',function(socket_id){
 socket.on('parAgregado',function(socket_id){
     var cantidad = parseInt($('[id="'+socket_id+'_cantidad_conexiones"]').text())
     $('[id="'+socket_id+'_cantidad_conexiones"]').text(cantidad+1);
+    refresh();
+});
+
+socket.on('syncParVista',function(socket_id, pares){
+    $('[id="'+socket_id+'_cantidad_conexiones"]').text(pares);
     refresh();
 });
 
